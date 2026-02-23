@@ -1,4 +1,4 @@
-# Astrid Backend
+# Mistro Backend
 
 ## Quick Start
 1. Copy `.env.example` to `.env`
@@ -12,6 +12,7 @@
 ## Available MVP Routes
 - `GET /api/jobs`
 - `GET /api/jobs/:id`
+- `GET /api/jobs/:id/stats`
 - `GET /api/jobs/search/live?q=&location=&page=`
 - `POST /api/jobs/ingest`
 - `POST /api/jobs/scrape`
@@ -34,8 +35,13 @@
 
 ## Notes
 - Ingest uses SerpAPI when `SERPAPI_KEY` is set.
-- Normalization uses Gemini when `GEMINI_API_KEY` is set and falls back to heuristics.
+- Backend normalization via Gemini is optional and disabled by default:
+  - set `ENABLE_GEMINI_NORMALIZATION=true` and `GEMINI_API_KEY` only if you want it.
+  - otherwise the backend uses heuristic normalization.
 - Reviews/hire-rate include provider fallbacks when upstream keys are missing.
+- Monthly auto-refresh is built in (cron):
+  - controls: `AUTO_REFRESH_ENABLED`, `AUTO_REFRESH_CRON`, `AUTO_REFRESH_QUERY`, `AUTO_REFRESH_LOCATION`, `AUTO_REFRESH_PAGES`, `AUTO_REFRESH_COMPANY_LIMIT`
+  - refreshes jobs ingest + cached company reviews + hire-rate snapshots.
 - Job-specific stats endpoint includes:
   - interview success rate proxy (offer outcomes from interview records)
   - applicant selectivity rate proxy (1/applicantCount benchmark)

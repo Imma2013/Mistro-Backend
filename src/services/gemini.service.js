@@ -24,7 +24,7 @@ function heuristicNormalize({ title, company, location, salary, descriptionSnipp
 }
 
 async function normalizeJob(job) {
-  if (!env.geminiApiKey) {
+  if (!env.enableGeminiNormalization || !env.geminiApiKey) {
     return heuristicNormalize(job);
   }
 
@@ -68,4 +68,3 @@ async function normalizeJob(job) {
 module.exports = {
   normalizeJob,
 };
-

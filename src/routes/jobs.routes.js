@@ -1,5 +1,5 @@
 const express = require("express");
-const { listJobs, getJobById, ingestFromSerpApi } = require("../services/jobs.service");
+const { listJobs, getJobById, getJobStatsById, ingestFromSerpApi } = require("../services/jobs.service");
 
 const router = express.Router();
 
@@ -45,6 +45,18 @@ router.get("/:id", (req, res) => {
     return res.status(404).json({ ok: false, error: "Job not found" });
   }
   return res.json({ ok: true, data: job });
+});
+
+router.get("/:id/stats", async (req, res, next) => {
+  try {
+    const stats = await getJobStatsById(req.params.id);
+    if (!stats) {
+      return res.status(404).json({ ok: false, error: "Job stats not found" });
+    }
+    return res.json({ ok: true, data: stats });
+  } catch (err) {
+    return next(err);
+  }
 });
 
 module.exports = router;
